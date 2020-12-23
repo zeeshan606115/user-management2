@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}
+    Invitation
+{% endblock title %}
+{% block content %}
+    {%  if is_empty %}
+        <h1>No Invitation received</h1>
+        {% else %}
+            {% for item in qs %}
+                <div class="ui segment">
+                    <div class="ui grid">
+                        <div class="row">
+                            <div class="three wide column">
+                                <img class="ui small circular image" src="{{ item.avatar.url }}">
+                            </div>
+                            <div class="thirteen wide column">
+                                <h3>{{ item.user }}</h3>
+                                <p>{{ item.bio }}</p>
+                                <a href=""><button class="ui primary button w-big mb-5">See Profile</button> </a>
+
+                                <form action="{% url 'profiles:accept-invite' %}" method="POST" class="like-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="profile_pk" value="{{ item.pk }}">
+                                    <button type="submit" class="ui positive basic button w-big mb-5 mt-5">
+                                        <i class="close icon"></i>
+                                        Accept Invitation
+                                    </button>
+                                </form>
+                                <form action="{% url 'profiles:reject-invite' %}" method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="profile_pk" value="{{ item.pk }}">
+                                    <button type="submit" class="ui negative basic button w-big mb-5 mt-5">
+                                        <i class="check icon"></i>
+                                        Reject Invitation
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+    {% endif %}
+{%  endblock content %}
+
